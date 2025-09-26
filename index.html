@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DHL Package Tracking</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        /* Header Styles */
+        header {
+            background: linear-gradient(to right, #FFCC00, #FFCC00);
+            padding: 15px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo-text {
+            color: #D40511;
+            font-size: 32px;
+            font-weight: bold;
+            letter-spacing: -1px;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin-left: 25px;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: #D40511;
+            font-weight: 600;
+            font-size: 16px;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #333;
+        }
+        
+        /* Main Content */
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        
+        .tracking-section {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            color: #D40511;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+        
+        .tracking-form {
+            display: flex;
+            margin-bottom: 20px;
+            max-width: 600px;
+        }
+        
+        .tracking-input {
+            flex: 1;
+            padding: 14px 15px;
+            border: 2px solid #ddd;
+            border-radius: 6px 0 0 6px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .tracking-input:focus {
+            border-color: #D40511;
+            outline: none;
+        }
+        
+        .tracking-btn {
+            background-color: #D40511;
+            color: white;
+            border: none;
+            padding: 0 25px;
+            border-radius: 0 6px 6px 0;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+        
+        .tracking-btn:hover {
+            background-color: #B3040E;
+        }
+        
+        .generate-btn {
+            background-color: #FFCC00;
+            color: #333;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            margin-left: 10px;
+            transition: background-color 0.3s;
+        }
+        
+        .generate-btn:hover {
+            background-color: #E6B800;
+        }
+        
+        .info-text {
+            color: #666;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+        
+        /* Tracking Results */
+        .tracking-results {
+            display: none;
+            margin-top: 30px;
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .shipment-info {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid #D40511;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .info-item {
+            margin-bottom: 10px;
+        }
+        
+        .info-label {
+            font-weight: 600;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .info-value {
+            font-size: 16px;
+            margin-top: 5px;
+        }
+        
+        .status-container {
+            margin: 25px 0;
+        }
+        
+        .status-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .status-text {
+            font-size: 18px;
+            font-weight: 600;
+            color: #D40511;
+        }
+        
+        .status-bar {
+            height: 8px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .status-progress {
+            height: 100%;
+            background: linear-gradient(to right, #D40511, #FF6B6B);
+            width: 0%;
+            border-radius: 4px;
+            transition: width 1.5s ease-in-out;
+        }
+        
+        .status-milestones {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            position: relative;
+        }
+        
+        .milestone {
+            text-align: center;
+            width: 20%;
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .milestone.active {
+            color: #D40511;
+            font-weight: 600;
+        }
+        
+        .milestone-dot {
+            width: 12px;
+            height: 12px;
+            background-color: #e9ecef;
+            border-radius: 50%;
+            margin: 0 auto 5px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .milestone.active .milestone-dot {
+            background-color: #D40511;
+            box-shadow: 0 0 0 3px rgba(212, 5, 17, 0.2);
+        }
+        
+        /* Tracking History */
+        .tracking-history {
+            margin-top: 30px;
+        }
+        
+        .history-title {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: #333;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 10px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background-color: #D40511;
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+        }
+        
+        .timeline-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .timeline-marker {
+            position: absolute;
+            left: -30px;
+            top: 5px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #D40511;
+            border: 3px solid white;
+            box-shadow: 0 0 0 2px #D40511;
+        }
+        
+        .timeline-content {
+            background-color: white;
+            padding: 15px;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+        
+        .timeline-content:hover {
+            transform: translateX(5px);
+        }
+        
+        .timeline-date {
+            font-weight: 600;
+            color: #D40511;
+            margin-bottom: 5px;
+        }
+        
+        .timeline-location {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        
+        .timeline-description {
+            font-size: 15px;
+        }
+        
+        /* Map Visualization */
+        .map-visualization {
+            margin: 30px 0;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            display: none;
+        }
+        
+        .map-title {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .map-container {
+            height: 200px;
+            background: linear-gradient(to right, #e9ecef, #f8f9fa);
+            border-radius: 6px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .route-line {
+            position: absolute;
+            top: 50%;
+            left: 10%;
+            right: 10%;
+            height: 4px;
+            background-color: #D40511;
+            transform: translateY(-50%);
+        }
+        
+        .location-marker {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 30px;
+            height: 30px;
+            background-color: #D40511;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        .location-label {
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+            font-size: 12px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .package-marker {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            background-color: #FFCC00;
+            border-radius: 50%;
+            border: 2px solid #D40511;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: translateY(-50%) scale(1); }
+            50% { transform: translateY(-50%) scale(1.1); }
+            100% { transform: translateY(-50%) scale(1); }
+        }
+        
+        /* Share Section */
+        .share-section {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .share-title {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .share-options {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .share-btn {
+            background-color: #D40511;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background-color 0.3s;
+        }
+        
+        .share-btn:hover {
+            background-color: #B3040E;
+        }
+        
+        .share-link {
+            flex: 1;
+            display: flex;
+        }
+        
+        .share-input {
+            flex: 1;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px 0 0 6px;
+            font-size: 14px;
+        }
+        
+        .copy-btn {
+            background-color: #FFCC00;
+            color: #333;
+            border: none;
+            padding: 0 15px;
+            border-radius: 0 6px 6px 0;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+        
+        .copy-btn:hover {
+            background-color: #E6B800;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: #333;
+            color: white;
+            padding: 40px 0 20px;
+            margin-top: 50px;
+        }
+        
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .footer-column h3 {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: #FFCC00;
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-links a {
+            color: #ddd;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: #FFCC00;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #444;
+            color: #aaa;
+            font-size: 14px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .tracking-form {
+                flex-direction: column;
+            }
+            
+            .tracking-input {
+                border-radius: 6px;
+                margin-bottom: 10px;
+            }
+            
+            .tracking-btn {
+                border-radius: 6px;
+                padding: 14px;
+            }
+            
+            .generate-btn {
+                margin-left: 0;
+                margin-top: 10px;
+            }
+            
+            .header-container {
+                flex-direction: column;
+            }
+            
+            .nav-links {
+                margin-top: 15px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .nav-links li {
+                margin: 5px 10px;
+            }
+            
+            .status-milestones {
+                flex-wrap: wrap;
+            }
+            
+            .milestone {
+                width: 50%;
+                margin-bottom: 15px;
+            }
+            
+            .share-options {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                <div class="logo-text">DHL</div>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#">Express</a></li>
+                <li><a href="#">Parcel & eCommerce</a></li>
+                <li><a href="#">Logistics</a></li>
+                <li><a href="#">Mail</a></li>
+                <li><a href="#">Press</a></li>
+                <li><a href="#">About</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="tracking-section">
+            <h1>Track Your Shipment</h1>
+            <p>Enter your tracking number to check the status of your shipment</p>
+            
+            <div class="tracking-form">
+                <input type="text" class="tracking-input" placeholder="Tracking Number (e.g., 1234567890)" id="trackingInput">
+                <button class="tracking-btn" id="trackButton">Track</button>
+                <button class="generate-btn" id="generateButton">Generate Random Tracking Number</button>
+            </div>
+            
+            <p class="info-text">You can enter up to 10 tracking numbers separated by commas</p>
+            
+            <!-- Tracking Results (initially hidden) -->
+            <div class="tracking-results" id="trackingResults">
+                <div class="shipment-info">
+                    <h2>Shipment Details</h2>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-label">Tracking Number</div>
+                            <div class="info-value" id="trackingNumberDisplay">1234567890</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Service</div>
+                            <div class="info-value">DHL Express Worldwide</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Status</div>
+                            <div class="info-value" id="statusDisplay">In Transit</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Estimated Delivery</div>
+                            <div class="info-value" id="deliveryDisplay">Monday, October 16, 2023 by End of Day</div>
+                        </div>
+                    </div>
+                    
+                    <div class="status-container">
+                        <div class="status-header">
+                            <div class="status-text" id="statusText">Shipment is in transit</div>
+                            <div id="progressPercentage">0%</div>
+                        </div>
+                        <div class="status-bar">
+                            <div class="status-progress" id="statusProgress"></div>
+                        </div>
+                        <div class="status-milestones">
+                            <div class="milestone" id="milestone1">
+                                <div class="milestone-dot"></div>
+                                <div>Order Received</div>
+                            </div>
+                            <div class="milestone" id="milestone2">
+                                <div class="milestone-dot"></div>
+                                <div>Processing</div>
+                            </div>
+                            <div class="milestone" id="milestone3">
+                                <div class="milestone-dot"></div>
+                                <div>In Transit</div>
+                            </div>
+                            <div class="milestone" id="milestone4">
+                                <div class="milestone-dot"></div>
+                                <div>Out for Delivery</div>
+                            </div>
+                            <div class="milestone" id="milestone5">
+                                <div class="milestone-dot"></div>
+                                <div>Delivered</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Map Visualization -->
+                <div class="map-visualization" id="mapVisualization">
+                    <div class="map-title">Package Journey</div>
+                    <div class="map-container">
+                        <div class="route-line"></div>
+                        <div class="location-marker" style="left: 10%;">
+                            <i class="fas fa-warehouse"></i>
+                            <div class="location-label">Warehouse</div>
+                        </div>
+                        <div class="location-marker" style="left: 90%;">
+                            <i class="fas fa-home"></i>
+                            <div class="location-label">Your Location</div>
+                        </div>
+                        <div class="package-marker" id="packageMarker" style="left: 30%;"></div>
+                    </div>
+                </div>
+                
+                <div class="tracking-history">
+                    <h3 class="history-title">Shipment History</h3>
+                    <div class="timeline" id="timeline">
+                        <!-- Timeline items will be generated by JavaScript -->
+                    </div>
+                </div>
+                
+                <!-- Share Section -->
+                <div class="share-section" id="shareSection">
+                    <h3 class="share-title">Share Tracking Information</h3>
+                    <div class="share-options">
+                        <button class="share-btn" id="shareWhatsApp">
+                            <i class="fab fa-whatsapp"></i> WhatsApp
+                        </button>
+                        <button class="share-btn" id="shareEmail">
+                            <i class="fas fa-envelope"></i> Email
+                        </button>
+                        <div class="share-link">
+                            <input type="text" class="share-input" id="shareLink" readonly>
+                            <button class="copy-btn" id="copyLink">Copy</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-grid">
+                <div class="footer-column">
+                    <h3>Services</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Express Shipping</a></li>
+                        <li><a href="#">Parcel & eCommerce</a></li>
+                        <li><a href="#">Freight Transportation</a></li>
+                        <li><a href="#">Supply Chain Solutions</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Support</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">Tracking Support</a></li>
+                        <li><a href="#">Customer Service</a></li>
+                        <li><a href="#">Find a Location</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Company</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">About DHL</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Press</a></li>
+                        <li><a href="#">Investor Relations</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Legal</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Terms of Use</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Imprint</a></li>
+                        <li><a href="#">Disclosure</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 Deutsche Post DHL Group. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Generate random tracking number
+        function generateTrackingNumber() {
+            return Math.floor(1000000000 + Math.random() * 9000000000).toString();
+        }
+        
+        // Get URL parameters
+        function getUrlParameter(name) {
+            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+            const regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+            const results = regex.exec(location.search);
+            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+        }
+        
+        // Update the tracking display with data
+        function updateTrackingDisplay(trackingNumber) {
+            const trackingResults = document.getElementById('trackingResults');
+            const trackingNumberDisplay = document.getElementById('trackingNumberDisplay');
+            const statusDisplay = document.getElementById('statusDisplay');
+            const deliveryDisplay = document.getElementById('deliveryDisplay');
+            const statusText = document.getElementById('statusText');
+            const statusProgress = document.getElementById('statusProgress');
+            const progressPercentage = document.getElementById('progressPercentage');
+            const mapVisualization = document.getElementById('mapVisualization');
+            const packageMarker = document.getElementById('packageMarker');
+            const timeline = document.getElementById('timeline');
+            const shareSection = document.getElementById('shareSection');
+            const shareLink = document.getElementById('shareLink');
+            
+            // Set tracking number
+            trackingNumberDisplay.textContent = trackingNumber;
+            
+            // Generate consistent status based on tracking number (for shareable URLs)
+            // This ensures the same tracking number always shows the same status
+            const statusSeed = parseInt(trackingNumber.substring(0, 8)) % 5;
+            const statuses = [
+                { status: "Order Received", progress: 10, text: "We've received your order details" },
+                { status: "Processing", progress: 30, text: "Package is being processed at our facility" },
+                { status: "In Transit", progress: 60, text: "Package is in transit to your location" },
+                { status: "Out for Delivery", progress: 90, text: "Package is out for delivery today" },
+                { status: "Delivered", progress: 100, text: "Package has been delivered" }
+            ];
+            
+            const status = statuses[statusSeed];
+            
+            statusDisplay.textContent = status.status;
+            statusText.textContent = status.text;
+            
+            // Animate progress bar
+            setTimeout(() => {
+                statusProgress.style.width = status.progress + '%';
+                progressPercentage.textContent = status.progress + '%';
+            }, 100);
+            
+            // Update milestones
+            for (let i = 1; i <= 5; i++) {
+                const milestone = document.getElementById('milestone' + i);
+                if (i <= statusSeed + 1) {
+                    milestone.classList.add('active');
+                } else {
+                    milestone.classList.remove('active');
+                }
+            }
+            
+            // Update delivery date (based on tracking number for consistency)
+            const deliveryOffset = parseInt(trackingNumber.substring(5, 8)) % 7 + 3; // 3-9 days
+            const deliveryDate = new Date();
+            deliveryDate.setDate(deliveryDate.getDate() + deliveryOffset);
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            deliveryDisplay.textContent = deliveryDate.toLocaleDateString('en-US', options) + ' by End of Day';
+            
+            // Show map visualization for in-transit packages
+            if (status.status === "In Transit" || status.status === "Out for Delivery") {
+                mapVisualization.style.display = 'block';
+                // Position package marker based on progress
+                const packagePosition = 10 + (status.progress / 100) * 80;
+                packageMarker.style.left = packagePosition + '%';
+            } else {
+                mapVisualization.style.display = 'none';
+            }
+            
+            // Generate timeline events
+            timeline.innerHTML = '';
+            const events = generateTimelineEvents(status.status, trackingNumber);
+            events.forEach(event => {
+                const timelineItem = document.createElement('div');
+                timelineItem.className = 'timeline-item';
+                timelineItem.innerHTML = `
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">${event.date}</div>
+                        <div class="timeline-location">${event.location}</div>
+                        <div class="timeline-description">${event.description}</div>
+                    </div>
+                `;
+                timeline.appendChild(timelineItem);
+            });
+            
+            // Update share link
+            const currentUrl = window.location.href.split('?')[0]; // Remove existing parameters
+            shareLink.value = `${currentUrl}?tracking=${trackingNumber}`;
+            shareSection.style.display = 'block';
+            
+            // Show results
+            trackingResults.style.display = 'block';
+            
+            // Scroll to results
+            trackingResults.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // Generate timeline events based on status
+        function generateTimelineEvents(status, trackingNumber) {
+            const events = [];
+            const now = new Date();
+            
+            // Use tracking number as seed for consistent dates
+            const trackingSeed = parseInt(trackingNumber.substring(2, 6));
+            
+            // Always add shipment created event
+            const createdDate = new Date(now);
+            createdDate.setDate(createdDate.getDate() - (trackingSeed % 3) - 1);
+            events.push({
+                date: createdDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) + ' - ' + 
+                      createdDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
+                location: 'WAREHOUSE FACILITY',
+                description: 'Shipment information received'
+            });
+            
+            // Add events based on status
+            if (status !== "Order Received") {
+                const processedDate = new Date(createdDate);
+                processedDate.setHours(processedDate.getHours() + (trackingSeed % 12) + 2);
+                events.unshift({
+                    date: processedDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) + ' - ' + 
+                          processedDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
+                    location: 'DISTRIBUTION CENTER',
+                    description: 'Processed at DHL Facility'
+                });
+            }
+            
+            if (status === "In Transit" || status === "Out for Delivery" || status === "Delivered") {
+                const transitDate = new Date(createdDate);
+                transitDate.setDate(transitDate.getDate() + 1);
+                events.unshift({
+                    date: transitDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) + ' - ' + 
+                          transitDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
+                    location: 'SORTING FACILITY',
+                    description: 'Departed from DHL Facility'
+                });
+            }
+            
+            if (status === "Out for Delivery" || status === "Delivered") {
+                const outForDeliveryDate = new Date(now);
+                outForDeliveryDate.setHours(8 + (trackingSeed % 4), trackingSeed % 60);
+                events.unshift({
+                    date: outForDeliveryDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) + ' - ' + 
+                          outForDeliveryDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
+                    location: 'LOCAL FACILITY',
+                    description: 'Out for delivery'
+                });
+            }
+            
+            if (status === "Delivered") {
+                const deliveredDate = new Date(now);
+                deliveredDate.setHours(12 + (trackingSeed % 6), trackingSeed % 60);
+                events.unshift({
+                    date: deliveredDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) + ' - ' + 
+                          deliveredDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
+                    location: 'YOUR LOCATION',
+                    description: 'Delivered - Signed for by recipient'
+                });
+            }
+            
+            return events;
+        }
+        
+        // Event listeners
+        document.getElementById('trackButton').addEventListener('click', function() {
+            const trackingInput = document.getElementById('trackingInput').value.trim();
+            
+            if (trackingInput) {
+                // Update URL without reloading the page
+                const newUrl = window.location.href.split('?')[0] + '?tracking=' + trackingInput;
+                window.history.pushState({ path: newUrl }, '', newUrl);
+                
+                updateTrackingDisplay(trackingInput);
+            } else {
+                alert('Please enter a tracking number');
+            }
+        });
+        
+        document.getElementById('generateButton').addEventListener('click', function() {
+            const trackingNumber = generateTrackingNumber();
+            document.getElementById('trackingInput').value = trackingNumber;
+            
+            // Update URL without reloading the page
+            const newUrl = window.location.href.split('?')[0] + '?tracking=' + trackingNumber;
+            window.history.pushState({ path: newUrl }, '', newUrl);
+            
+            updateTrackingDisplay(trackingNumber);
+        });
+        
+        // Allow pressing Enter to track
+        document.getElementById('trackingInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                document.getElementById('trackButton').click();
+            }
+        });
+        
+        // Share functionality
+        document.getElementById('copyLink').addEventListener('click', function() {
+            const shareInput = document.getElementById('shareLink');
+            shareInput.select();
+            document.execCommand('copy');
+            alert('Tracking link copied to clipboard!');
+        });
+        
+        document.getElementById('shareWhatsApp').addEventListener('click', function() {
+            const trackingNumber = document.getElementById('trackingNumberDisplay').textContent;
+            const message = `Check the status of your DHL shipment: ${window.location.href}`;
+            const url = `https://wa.me/?text=${encodeURIComponent(message)}`;
+            window.open(url, '_blank');
+        });
+        
+        document.getElementById('shareEmail').addEventListener('click', function() {
+            const trackingNumber = document.getElementById('trackingNumberDisplay').textContent;
+            const subject = `DHL Tracking: ${trackingNumber}`;
+            const body = `You can track your DHL shipment at: ${window.location.href}`;
+            const url = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+            window.location.href = url;
+        });
+        
+        // Check for tracking parameter in URL on page load
+        window.addEventListener('load', function() {
+            const urlTracking = getUrlParameter('tracking');
+            
+            if (urlTracking) {
+                document.getElementById('trackingInput').value = urlTracking;
+                updateTrackingDisplay(urlTracking);
+            } else {
+                // Initialize with a random tracking number
+                const initialTrackingNumber = generateTrackingNumber();
+                document.getElementById('trackingInput').value = initialTrackingNumber;
+                updateTrackingDisplay(initialTrackingNumber);
+            }
+        });
+        
+        // Handle browser back/forward buttons
+        window.addEventListener('popstate', function() {
+            const urlTracking = getUrlParameter('tracking');
+            
+            if (urlTracking) {
+                document.getElementById('trackingInput').value = urlTracking;
+                updateTrackingDisplay(urlTracking);
+            }
+        });
+    </script>
+</body>
+</html>
